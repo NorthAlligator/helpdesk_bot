@@ -26,17 +26,17 @@ DB and Tables will automatically created if they not exists in dir of Project.
 
 ### Admins commands:
     There are several block
-    Print block:
-        /root_print_all - Print all Tickets 
-        /root_print_created - Print Tickets with Status Created
-        /root_print_in_work - Print Tickets with Status In Work
-        /root_print_done - Print Tickets with Status Done
-        /root_print_cancelled - Print Tickets with Status Cancelled
-        /root_about - Print all information about single Ticket
-    Functional block:
-        /root_comment - Change the comment of single Ticket
-        /root_in_work - Change status of single Ticket to "In Work"
-        /root_done - Change status of single Ticket to "Done"
+- Print block:
+- /root_print_all - Print all Tickets 
+- /root_print_created - Print Tickets with Status Created
+- /root_print_in_work - Print Tickets with Status In Work
+- /root_print_done - Print Tickets with Status Done
+- /root_print_cancelled - Print Tickets with Status Cancelled
+- - /root_about - Print all information about single Ticket
+- Functional block:
+- - /root_comment - Change the comment of single Ticket
+- - /root_in_work - Change status of single Ticket to "In Work"
+- -/root_done - Change status of single Ticket to "Done"
 ###
 
 ### Features: 
@@ -71,17 +71,17 @@ DB and Tables will automatically created if they not exists in dir of Project.
 
 ### Админские команды:
     Есть несколько блоков:
-    Блок вывода:
-        /root_print_all - Вывести все заявки
-        /root_print_created - Вывести заявки со статусом "Создана"
-        /root_print_in_work - Вывести заявки со статусом "В работе"
-        /root_print_done - Вывести заявки со статусом "Завершена"
-        /root_print_cancelled - Вывести заявки со статусом "Отменена"
-        /root_about - Вывести всю информацию об одной заявке
-    Functional block:
-        /root_comment - Поменять комментарий специалиста заявки
-        /root_in_work - Поменять статус заявки на "В работе"
-        /root_done - Поменять статус заявки на "Завершена"
+- Блок вывода:
+- - /root_print_all - Вывести все заявки
+- - /root_print_created - Вывести заявки со статусом "Создана"
+- - /root_print_in_work - Вывести заявки со статусом "В работе"
+- - /root_print_done - Вывести заявки со статусом "Завершена"
+- - /root_print_cancelled - Вывести заявки со статусом "Отменена"
+- - /root_about - Вывести всю информацию об одной заявке
+- Functional block:
+- - /root_comment - Поменять комментарий специалиста заявки
+- - /root_in_work - Поменять статус заявки на "В работе"
+- - /root_done - Поменять статус заявки на "Завершена"
 ###
 
 ### В разработке: 
