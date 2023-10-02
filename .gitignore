@@ -1,0 +1,6 @@
+/config.py
+__pycache__/
+/helpdesk.db
+/sqlite_create_table.py
+/anydesk.png
+/.gitignore
