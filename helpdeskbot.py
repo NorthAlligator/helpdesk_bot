@@ -1,17 +1,63 @@
 import telebot
 import sqlite3
+import os
 from config import bot_token, db_location, anydesk_image
 from telegram.constants import ParseMode
 import datetime
+
+#Устанавливаем текущую директорию, как директорию исполняемого файла
+project_directory = os.path.dirname(os.path.abspath(__file__))
+os.chdir(project_directory)
 
 #Создание бота с токеном
 bot = telebot.TeleBot(bot_token)
 active_action = None
 
+#Проверка существует ли БД и таблицы
+try:
+    conn = sqlite3.connect(db_location)
+    cursor = conn.cursor()
+    print("Соединение с базой данных успешно установлено")
+
+    #Создание таблицы Tickets, если она не существует
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS tickets(
+        ticket_id INTEGER PRIMARY KEY NOT NULL,
+        user_id INTEGER NOT NULL,
+        subject TEXT NOT NULL,
+        body TEXT NOT NULL,
+        date TEXT NOT NULL,
+        status TEXT NOT NULL,
+        comment TEXT,
+        FOREIGN KEY (user_id) REFERENCES users(user_id)
+    )
+''')
+    #Создание таблицы Users, если она не существует
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS users(
+        user_id INTEGER PRIMARY KEY NOT NULL,
+        name TEXT NOT NULL,
+        phone TEXT NOT NULL,
+        location TEXT NOT NULL,
+        anydesk TEXT,
+        role TEXT NOT NULL
+    )
+''')
+    conn.commit()
+    conn.close()
+
+except sqlite3.Error as e:
+    print(f"Ошибка при соединении с базой данных: {e}")
+
+finally:
+    if conn:
+        conn.close()
+
+
+
 ##### Базовые функции #####
 #Проверка админ ли пользователь
 def getAdmins():
-    
     conn = sqlite3.connect(db_location)
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
@@ -22,7 +68,6 @@ def getAdmins():
       
 #Получение данных пользователя из базы   
 def getUserData(user_id):
-    print(db_location)
     conn = sqlite3.connect(db_location)
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
