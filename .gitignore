@@ -4,3 +4,5 @@ __pycache__/
 /sqlite_create_table.py
 /anydesk.png
 /.gitignore
+/*sql*
+/dockerfile

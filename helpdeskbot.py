@@ -11,6 +11,7 @@ active_action = None
 ##### Базовые функции #####
 #Проверка админ ли пользователь
 def getAdmins():
+    
     conn = sqlite3.connect(db_location)
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
@@ -21,6 +22,7 @@ def getAdmins():
       
 #Получение данных пользователя из базы   
 def getUserData(user_id):
+    print(db_location)
     conn = sqlite3.connect(db_location)
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()

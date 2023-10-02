@@ -75,5 +75,6 @@ This is script for making tables:
 - Function to cancel current action
 - AI to classify tickets
 - Chat in Bot between User and Admin
+- Docker File
 ##
 #
