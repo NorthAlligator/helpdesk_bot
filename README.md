@@ -46,7 +46,7 @@ DB and Tables will automatically created if they not exists in dir of Project.
 - Docker File
 - English language
 ###
-## Russian
+## Русский
 Это мой первый пет-проект на Python
 
 Данный телеграм бот используется как простая Helpdesk система, без необходимости обучения пользователя.
