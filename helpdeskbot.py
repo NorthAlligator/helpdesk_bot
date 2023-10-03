@@ -499,8 +499,9 @@ def done_step(message):
 @bot.message_handler(commands=['root_stop_polling'])
 def root_stop_polling(message):
     if message.chat.id in getAdmins():
-        bot.stop_polling()
-        bot.send_message(message.chat.id,"Бот успешно выключен.")
+        for admin in getAdmins():
+            bot.send_message(admin,f"‼‼‼‼‼‼‼\nБот выключен.\n‼‼‼‼‼‼‼")
+        bot.stop_polling()       
         print("Бот был выключен.")
     else:
         print("дурак?")
