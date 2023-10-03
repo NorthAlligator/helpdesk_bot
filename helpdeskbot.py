@@ -17,7 +17,7 @@ active_action = None
 try:
     conn = sqlite3.connect(db_location)
     cursor = conn.cursor()
-    print("Соединение с базой данных успешно установлено")
+    
 
     #Создание таблицы Tickets, если она не существует
     cursor.execute('''
@@ -45,7 +45,7 @@ try:
 ''')
     conn.commit()
     conn.close()
-
+    print(f"Соединение с базой данных успешно установлено")
 except sqlite3.Error as e:
     print(f"Ошибка при соединении с базой данных: {e}")
 
@@ -494,5 +494,15 @@ def done_step(message):
 
 
 
+#/root_stop_polling
+#Функция, чтобы остановить бота
+@bot.message_handler(commands=['root_stop_polling'])
+def stop_polling(message):
+    if message.chat.id in getAdmins():
+        bot.stop_polling()
+        print("Бот был остановлен.")
+
+
+#Бесконечный цикл работы бота
 if __name__ == "__main__":
     bot.polling(none_stop=True)
