@@ -4,6 +4,7 @@ import os
 from config import bot_token, db_location, anydesk_image
 from telegram.constants import ParseMode
 import datetime
+import time
 
 #Устанавливаем текущую директорию, как директорию исполняемого файла
 project_directory = os.path.dirname(os.path.abspath(__file__))
@@ -496,17 +497,30 @@ def done_step(message):
 
 #/root_stop_polling
 #Функция, чтобы остановить бота
+stop_bot = False
 @bot.message_handler(commands=['root_stop_polling'])
 def root_stop_polling(message):
     if message.chat.id in getAdmins():
         for admin in getAdmins():
             bot.send_message(admin,f"‼‼‼‼‼‼‼\nБот выключен.\n‼‼‼‼‼‼‼")
-        bot.stop_polling()       
+        global stop_bot
+        stop_bot = True    
+        bot.stop_polling()
         print("Бот был выключен.")
-    else:
-        print("дурак?")
+
 
 
 #Бесконечный цикл работы бота
+def main():
+    global stop_bot
+    while not stop_bot:
+        try:
+            bot.polling(non_stop=True)
+        except Exception as e:
+            print(f"Произошла ошибка: {e}")
+            print("Перезапуск бота через 3 секунды...")
+            time.sleep(3)
+            print("Бот запущен.")
+
 if __name__ == "__main__":
-    bot.polling(none_stop=True)
+    main()
