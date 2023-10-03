@@ -497,10 +497,13 @@ def done_step(message):
 #/root_stop_polling
 #Функция, чтобы остановить бота
 @bot.message_handler(commands=['root_stop_polling'])
-def stop_polling(message):
+def root_stop_polling(message):
     if message.chat.id in getAdmins():
         bot.stop_polling()
-        print("Бот был остановлен.")
+        bot.send_message(message.chat.id,"Бот успешно выключен.")
+        print("Бот был выключен.")
+    else:
+        print("дурак?")
 
 
 #Бесконечный цикл работы бота
