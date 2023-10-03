@@ -37,6 +37,7 @@ DB and Tables will automatically created if they not exists in dir of Project.
         /root_comment - Change the comment of single Ticket
         /root_in_work - Change status of single Ticket to "In Work"
         /root_done - Change status of single Ticket to "Done"
+        /root_stop_polling - Stop Bot
 ###
 
 ### Features: 
@@ -82,6 +83,7 @@ DB and Tables will automatically created if they not exists in dir of Project.
         /root_comment - Поменять комментарий специалиста заявки
         /root_in_work - Поменять статус заявки на "В работе"
         /root_done - Поменять статус заявки на "Завершена"
+        /root_stop_polling - Остановить Бота
 ###
 
 ### В разработке: 
