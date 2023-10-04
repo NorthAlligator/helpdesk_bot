@@ -1,6 +1,7 @@
 # helpdesk_bot
 ## English
-!!!atm BOT CAN SPEAK ONLY RUSSIAN!!!
+To change Bot's language to English or Russian you need a config.py with variable 'localization' equals 'ru' or 'en'
+Russian set as default localization
 
 Actually my first shitty pet-project
 
@@ -14,7 +15,7 @@ To register User as Administrator you need to manually change role in table User
 
 All data contained in SQLite DB. There are 1 DB(helpdesk.db) and 2 tables(users and tickets).
 
-Also you need a config.py which contains "bot_token", "db_location" and "anydesk_image".
+Also you need a config.py which contains "bot_token", "db_location", "anydesk_image" and "localization".
 
 DB and Tables will automatically created if they not exists in dir of Project.
 
@@ -33,6 +34,7 @@ DB and Tables will automatically created if they not exists in dir of Project.
         /root_print_done - Print Tickets with Status Done
         /root_print_cancelled - Print Tickets with Status Cancelled
         /root_about - Print all information about single Ticket
+        /root_print_users - Print all users
     Functional block:
         /root_comment - Change the comment of single Ticket
         /root_in_work - Change status of single Ticket to "In Work"
@@ -45,9 +47,12 @@ DB and Tables will automatically created if they not exists in dir of Project.
 - AI to classify tickets
 - Chat in Bot between User and Admin
 - Docker File
-- English language
+- English language - Done
 ###
 ## Русский
+Чтобы поменять язык бота на Английский или Русский Вам необходим файл config.py с переменной 'localization' равной 'ru' или 'en'
+По дефолту локализация Русская
+
 Это мой первый пет-проект на Python
 
 Данный телеграм бот используется как простая Helpdesk система, без необходимости обучения пользователя.
@@ -60,7 +65,7 @@ DB and Tables will automatically created if they not exists in dir of Project.
 
 Все данные хранятся в БД SQLite. Есть 1 БД(helpdesk.db) и две таблицы users и tickets.
 
-Также необходимо создать файл config.py, который содержит данные переменные: "bot_token", "db_location" и "anydesk_image".
+Также необходимо создать файл config.py, который содержит данные переменные: "bot_token", "db_location", "anydesk_image" and "localization".
 
 База данных и Таблицы автоматически создадутся в папке проекта, если они не существуют.
 
@@ -79,6 +84,7 @@ DB and Tables will automatically created if they not exists in dir of Project.
         /root_print_done - Вывести заявки со статусом "Завершена"
         /root_print_cancelled - Вывести заявки со статусом "Отменена"
         /root_about - Вывести всю информацию об одной заявке
+        /root_print_users - Вывести всех пользователей
     Блок функций:
         /root_comment - Поменять комментарий специалиста заявки
         /root_in_work - Поменять статус заявки на "В работе"
@@ -91,7 +97,7 @@ DB and Tables will automatically created if they not exists in dir of Project.
 - ИИ для классификации заявок
 - Чат между Админом и Пользователем в Боте
 - Докер файл
-- Английская локализация
+- Английская локализация - Сделано
 ###
 ##
 #
