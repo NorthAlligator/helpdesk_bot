@@ -1,7 +1,6 @@
 import telebot
 import sqlite3
 import os
-from config import bot_token, db_location, anydesk_image, localization
 from telegram.constants import ParseMode
 import datetime
 import time
@@ -11,6 +10,50 @@ import time
 project_directory = os.path.dirname(os.path.abspath(__file__))
 os.chdir(project_directory)
 
+#Проверяем, существует ли конфигурационный файл config.py
+#Check if config.py exists
+if not os.path.exists("config.py"):
+    print(f'Конфигурационный файл не найден, создаю / Configuration file does not exists, creating.')
+    with open("config.py", "w") as config_file:
+        config_file.write('bot_token = "" # Your Bot Token\n')
+        config_file.write('db_location = "" # SQLite DB Location\n')
+        config_file.write('localization = "ru" # ru or en\n')
+        config_file.write('root_pass = "" # Password to get role "admin"')
+    print("config.py создан / config.py created")
+else:
+    from config import localization
+    if localization == 'ru':
+        print("Конфигурационный файл существует.")
+    elif localization == 'en':
+        print("Configuration file exists.")
+    else:
+        print("Конфигурационный файл существует / Configuration file exists")
+
+#Иморт переменных из конфигурационного файла config.py
+#Import variables from config.py
+from config import bot_token, db_location, localization, root_pass
+
+#Проверка указана ли локализация в config.py
+#Check if localization exists in config.py
+if localization == 'ru':
+    print("Бот работает на русской локализации")
+elif localization == 'en':
+    print('Your bot starts with english localization')
+else:
+    print("Укажите локализацию(ru или en) в config.py / Specify localization(ru or en) in config.py")
+    exit()
+    
+#Проверка указан ли root пароль в config.py
+#Check if root_pass exists in config.py
+if not root_pass:
+    if localization == 'ru':
+        print("Укажите пароль администратора в config.py")
+        exit()
+    else:
+        print("Specify root password in config.py")
+
+
+
 #Создание бота с токеном
 #Create bot
 bot = telebot.TeleBot(bot_token)
@@ -19,55 +62,76 @@ active_action = None
 
 #Проверка существует ли БД и таблицы
 #Check if DB exists
-try:
-    conn = sqlite3.connect(db_location)
-    cursor = conn.cursor()
-    
+if db_location:
+    if db_location.endswith(".db"):
+        try:
+            conn = sqlite3.connect(db_location)
+            cursor = conn.cursor()
 
-    #Создание таблицы Tickets, если она не существует
-    #Create table Tickets if no exists
-    cursor.execute('''
-    CREATE TABLE IF NOT EXISTS tickets(
-        ticket_id INTEGER PRIMARY KEY NOT NULL,
-        user_id INTEGER NOT NULL,
-        subject TEXT NOT NULL,
-        body TEXT NOT NULL,
-        date TEXT NOT NULL,
-        status TEXT NOT NULL,
-        comment TEXT,
-        FOREIGN KEY (user_id) REFERENCES users(user_id)
-    )
-''')
-    #Создание таблицы Users, если она не существует
-    #Create table Users if no exists
-    cursor.execute('''
-    CREATE TABLE IF NOT EXISTS users(
-        user_id INTEGER PRIMARY KEY NOT NULL,
-        name TEXT NOT NULL,
-        phone TEXT NOT NULL,
-        location TEXT NOT NULL,
-        anydesk TEXT,
-        role TEXT NOT NULL
-    )
-''')
-    conn.commit()
-    conn.close()
-    if localization == 'ru':
-        print(f"Соединение с базой данных успешно установлено")
+            #Создание таблицы Tickets, если она не существует
+            #Create table Tickets if no exists
+            cursor.execute('''
+            CREATE TABLE IF NOT EXISTS tickets(
+                ticket_id INTEGER PRIMARY KEY NOT NULL,
+                user_id INTEGER NOT NULL,
+                subject TEXT NOT NULL,
+                body TEXT NOT NULL,
+                date TEXT NOT NULL,
+                status TEXT NOT NULL,
+                comment TEXT,
+                FOREIGN KEY (user_id) REFERENCES users(user_id)
+            )
+        ''')
+            
+            #Создание таблицы Users, если она не существует
+            #Create table Users if no exists
+            cursor.execute('''
+            CREATE TABLE IF NOT EXISTS users(
+                user_id INTEGER PRIMARY KEY NOT NULL,
+                name TEXT NOT NULL,
+                phone TEXT NOT NULL,
+                location TEXT NOT NULL,
+                anydesk TEXT,
+                role TEXT NOT NULL
+            )
+        ''')
+            
+            conn.commit()
+            conn.close()
+            if localization == 'ru':
+                print(f"Соединение с базой данных успешно установлено")
+            else:
+                print(f"Connect to DB successful.")
+        except sqlite3.Error as e:
+            if localization == 'ru':
+                print(f"Ошибка при соединении с базой данных: {e}")
+            else:
+                print(f"Something went wrong while connect to DB: {e}")
+
+        finally:
+            if conn:
+                conn.close()
     else:
-        print(f"Connect to DB successful.")
-except sqlite3.Error as e:
+        if localization == 'ru':
+            print(f"Файл БД должен иметь расширение '.db'. Проверьте файл config.py")
+            exit()
+        else:
+            print(f"DB file must have an extension 'db'. Check config.py")
+            exit()
+else:
     if localization == 'ru':
-        print(f"Ошибка при соединении с базой данных: {e}")
+        print(f"Не могу найти Базу данных. Проверьте файл config.py")
+        exit()
     else:
-        print(f"Something went wrong while connect to DB: {e}")
+        print(f"Can't find Database. Check config.py")
+        exit()
 
-
-finally:
-    if conn:
-        conn.close()
-
-
+#Просто текст
+#Just a text
+if localization == 'ru':
+    print(f"Все прошло успешно, бот запущен.\nДля того, чтобы выключить бота необходимо прописать команду /root_stop_polling Боту в телеграме")
+else:
+    print(f"Bot is started.\nIf you want to turn off bot you have to type this command /root_stop_polling to Bot in Telegram")
 
 ##### Базовые функции #####
 ##### Basic functions #####
@@ -116,7 +180,7 @@ def show_menu_keyboard():
 
 
 ##### Обработчики нажатий кнопок #####
-##### Button pressed handler #####
+##### Menu button pressed handlers #####
 @bot.callback_query_handler(func=lambda call: call.data == "new_ticket")
 def handle_new_ticket_callback(callback_query):
     global active_action
@@ -159,6 +223,7 @@ def handle_cancel_ticket_callback(callback_query):
 
 ##### Обработчики сообщений и комманд #####
 ##### Message and commands handlers #####
+
 #Команда /start
 #/start command
 @bot.message_handler(commands=['start'])
@@ -206,8 +271,7 @@ Give me your Anydesk number.\n
 <b>If you don't have Anydesk - <a href = 'https://anydesk.com/en/downloads/windows?dv=win_exe'>download here</a></b>\n\n
 <i>Just go to link and wait for download. After download start the Anydesk.</i>
     ''') 
-    with open(anydesk_image, 'rb') as photo:
-        bot.send_photo(message.chat.id, photo, caption=text, parse_mode=ParseMode.HTML)
+    bot.send_photo(message.chat.id, "https://fuzeservers.ru/wp-content/uploads/1/0/1/10192bdd7cc0747a1fbbc0e0bf75887c.png", caption=text, parse_mode=ParseMode.HTML)
     bot.register_next_step_handler(message, register_user_end, name, phone, location)
 
 def register_user_end(message, name, phone, location):
@@ -319,6 +383,7 @@ def process_ticket_id_step(message):
                 bot.send_message(chat_id, "Заявка с указанным ID не найдена.", reply_markup = show_menu_keyboard())
         except ValueError:
             bot.send_message(chat_id, "Пожалуйста, введите корректный ID заявки.", reply_markup = show_menu_keyboard())
+    
     else:
         try:
             ticket_id = int(message.text)
@@ -418,7 +483,7 @@ def output_all_tickets(message):
             cursor.execute("SELECT * FROM users WHERE user_id = ?", (ticket['user_id'],))
             user_data = cursor.fetchone()
             if localization == 'ru':
-                bot.send_message(message.chat.id, f'''<b><i>Данные заявки:</i></b>\n<b>ID заявки:</b> {ticket['ticket_id']}\n<b>Тема:</b> {ticket['subject']}\n<bОписание:</b> {ticket['body']}
+                bot.send_message(message.chat.id, f'''<b><i>Данные заявки:</i></b>\n<b>ID заявки:</b> {ticket['ticket_id']}\n<b>Тема:</b> {ticket['subject']}\n<b>Описание:</b> {ticket['body']}
 <b>Статус:</b> {ticket['status']}\n<b>Комментарий специалиста:</b> {ticket['comment']}\n<b>Дата создания:</b> {ticket['date']}
 \n<b><i>Данные пользователя:</i></b>\n<b>ФИО:</b> {user_data['name']}\n<b>Телефон:</b> {user_data['phone']}\n<b>Расположение:</b> {user_data['location']}
 <b>Anydesk:</b> {user_data['anydesk']}''',parse_mode=ParseMode.HTML)
@@ -428,7 +493,6 @@ def output_all_tickets(message):
 \n<b><i>User's INFO:</i></b>\n<b>Full name:</b> {user_data['name']}\n<b>Phone:</b> {user_data['phone']}\n<b>Location:</b> {user_data['location']}
 <b>Anydesk:</b> {user_data['anydesk']}''',parse_mode=ParseMode.HTML)
         conn.close()
-
 
 
 
@@ -530,6 +594,7 @@ def change_comment_step(message):
                 bot.send_message(chat_id, "Заявка с указанным ID не найдена.")
         except ValueError:
             bot.send_message(chat_id, "Пожалуйста, введите корректный ID заявки.")
+    
     else:
         try:
             ticket_id = int(message.text)
@@ -607,6 +672,7 @@ def output_about_step(message):
                 bot.send_message(chat_id, "Заявка с указанным ID не найдена.")
         except ValueError:
             bot.send_message(chat_id, "Пожалуйста, введите корректный ID заявки.")
+    
     else:
         try:
             ticket_id = int(message.text)
@@ -660,6 +726,7 @@ def in_work_step(message):
                 bot.send_message(chat_id, "Заявка с указанным ID не найдена.")
         except ValueError:
             bot.send_message(chat_id, "Пожалуйста, введите корректный ID заявки.")
+    
     else:
         try:
             ticket_id = int(message.text)
@@ -773,6 +840,48 @@ def root_print_users(message):
         conn.close()
 
 
+
+#/i_want_to_be_admin
+#Функция, чтобы дать пользователю права админа
+#Function to give a User role 'admin'
+@bot.message_handler(commands=['i_want_to_be_admin'])
+def be_admin(message):
+    if localization == 'ru':
+        bot.send_message(message.chat.id,"Введите пароль.")
+    else:
+        bot.send_message(message.chat.id,"Give me password.")
+    bot.register_next_step_handler(message,be_admin_step)
+
+def be_admin_step(message):
+    password = message.text
+    user_id = message.from_user.id
+    if getUserData(user_id):
+        if password == root_pass:
+            conn = sqlite3.connect(db_location)
+            conn.row_factory = sqlite3.Row
+            cursor = conn.cursor()
+            cursor.execute(f"UPDATE users SET role=? WHERE user_id=?",("admin", message.chat.id))
+            conn.commit()
+            conn.close()
+            if localization == 'ru':
+                bot.send_message(message.chat.id,"Вам выданы права администратора!")
+            else:
+                bot.send_message(message.chat.id,"You are admin now!")
+        else:
+            if localization == 'ru':
+                bot.send_message(message.chat.id,"Неверный пароль!")
+            else:
+                bot.send_message(message.chat.id,"Wrong password!")
+    else:
+        if localization == 'ru':
+            bot.send_message(message.chat.id,"Сначала зарегистрируйтесь!")
+            bot.register_next_step_handler(message, welcome_message)
+        else:
+            bot.send_message(message.chat.id,"Sign up before!")
+            bot.register_next_step_handler(message, welcome_message)
+
+
+
 #Бесконечный цикл работы бота
 #infinite loop
 def main():
@@ -780,17 +889,44 @@ def main():
     while not stop_bot:
         try:
             bot.polling(non_stop=True)
-        except Exception as e:
-            if localization == 'ru':
-                print(f"Произошла ошибка: {e}")
-                print("Перезапуск бота через 3 секунды...")
-                time.sleep(3)
-                print("Бот запущен.")
+        except telebot.apihelper.ApiException as e:
+            if e.result.status_code == 401:
+                if localization == 'ru':
+                    print(f"Что-то пошло не так с Токеном Вашего Бота.\nПроверьте файл config.py")
+                    exit()
+                else:
+                    print(f"Something went wrong with your Bot's Token\nCheck config.py file")
+                    exit()
+
             else:
-                print(f"Something went wrong: {e}")
-                print("Reboot bot after 3 seconds...")
-                time.sleep(3)
-                print("Bot started.")
+                if localization == 'ru':
+                    print(f"Неизвестная ошибка, возникшая в библиотеке telebot")
+                    exit()
+                else:
+                    print(f"Unknown error which raised from 'telebot'")
+                    exit()
+
+
+        except Exception as e:
+            if "Bot token is not defined" in str(e):
+                if localization == 'ru':
+                    print(f"Что-то пошло не так с Токеном Вашего Бота.\nПроверьте файл config.py")
+                    exit()
+                else:
+                    print(f"Something went wrong with your Bot's Token\nCheck config.py file")
+                    exit()
+            else:
+                if localization == 'ru':
+                    print(f"Произошла ошибка: {e}")
+                    print("Перезапуск бота через 3 секунды...")
+                    time.sleep(3)
+                    print("Бот запущен.")
+                else:
+                    print(f"Something went wrong: {e}")
+                    print("Reboot bot after 3 seconds...")
+                    time.sleep(3)
+                    print("Bot started.")
 
 if __name__ == "__main__":
     main()
+

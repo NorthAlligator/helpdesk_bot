@@ -11,11 +11,10 @@ Users can make a tickets and watching for their status.
 
 Everyone(users and admins) have to register in Bot first.
 
-To register User as Administrator you need to manually change role in table Users from "user" to "admin".
-
 All data contained in SQLite DB. There are 1 DB(helpdesk.db) and 2 tables(users and tickets).
 
-Also you need a config.py which contains "bot_token", "db_location", "anydesk_image" and "localization".
+Also you need a config.py which contains "bot_token", "db_location", "localization" and "root_pass".
+This file creates automatically if not exists.
 
 DB and Tables will automatically created if they not exists in dir of Project.
 
@@ -40,6 +39,7 @@ DB and Tables will automatically created if they not exists in dir of Project.
         /root_in_work - Change status of single Ticket to "In Work"
         /root_done - Change status of single Ticket to "Done"
         /root_stop_polling - Stop Bot
+        /i_want_to_be_admin - If user enter password from config.py then he get role 'admin'
 ###
 
 ### Features: 
@@ -48,6 +48,9 @@ DB and Tables will automatically created if they not exists in dir of Project.
 - Chat in Bot between User and Admin
 - Docker File
 - English language - Done
+- Which admin change Ticket status to "In Work"
+- Log for every Ticket, when status and comments changed, etc
+- Web Interface
 ###
 ## Русский
 Чтобы поменять язык бота на Английский или Русский Вам необходим файл config.py с переменной 'localization' равной 'ru' или 'en'
@@ -61,11 +64,10 @@ DB and Tables will automatically created if they not exists in dir of Project.
 
 Пользователям сначала необходимо зарегистрироваться.
 
-Чтобы установить администраторов Helpdesk системы, Вам необходимо вручную в Базе Данных в таблице "users" установить роль "admin" пользователю.
-
 Все данные хранятся в БД SQLite. Есть 1 БД(helpdesk.db) и две таблицы users и tickets.
 
-Также необходимо создать файл config.py, который содержит данные переменные: "bot_token", "db_location", "anydesk_image" and "localization".
+Также необходимо создать файл config.py, который содержит данные переменные: "bot_token", "db_location", "localization" и "root_pass".
+Файл создастся автоматически, если он не существует.
 
 База данных и Таблицы автоматически создадутся в папке проекта, если они не существуют.
 
@@ -90,6 +92,7 @@ DB and Tables will automatically created if they not exists in dir of Project.
         /root_in_work - Поменять статус заявки на "В работе"
         /root_done - Поменять статус заявки на "Завершена"
         /root_stop_polling - Остановить Бота
+        /i_want_to_be_admin - Если пользователь введет пароль из файла config.py, то его роль изменится на 'admin'
 ###
 
 ### В разработке: 
@@ -98,6 +101,9 @@ DB and Tables will automatically created if they not exists in dir of Project.
 - Чат между Админом и Пользователем в Боте
 - Докер файл
 - Английская локализация - Сделано
+- Какой администратор какую заявку взял в работу
+- Лог для каждой заявки, когда менялся статус, комментарии и прочее
+- Веб Интерфейс
 ###
 ##
 #
