@@ -46,8 +46,8 @@ DB and Tables will automatically created if they not exists in dir of Project.
 - Function to cancel current action
 - AI to classify tickets
 - Chat in Bot between User and Admin
-- Docker File - Done
-- English language - Done
+- Docker File - <b>Done</b>
+- English language - <b>Done</b>
 - Image on DockerHub
 - Which admin change Ticket status to "In Work"
 - Log for every Ticket, when status and comments changed, etc
@@ -100,8 +100,8 @@ DB and Tables will automatically created if they not exists in dir of Project.
 - Функция отмены текущего действия
 - ИИ для классификации заявок
 - Чат между Админом и Пользователем в Боте
-- Докер файл - Сделано
-- Английская локализация - Сделано
+- Докер файл - <b>Сделано</b>
+- Английская локализация - <b>Сделано</b>
 - Образ на dockerhub
 - Какой администратор какую заявку взял в работу
 - Лог для каждой заявки, когда менялся статус, комментарии и прочее
