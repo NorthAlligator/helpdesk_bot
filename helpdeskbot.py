@@ -231,9 +231,11 @@ def welcome_message(message):
     user_id = message.from_user.id
     if getUserData(user_id):
         if (localization=="ru"):
-            bot.send_message(message.chat.id,f"Добрый день, {getUserData(user_id)['name']}.\nВыберите пункт меню.", reply_markup = show_menu_keyboard())
+            welcome_text = f"Добрый день, {getUserData(user_id)['name']}.\nВыберите пункт меню."
+            return welcome_text
         else:
-            bot.send_message(message.chat.id,f"Welcome, {getUserData(user_id)['name']}.\nChoose action from menu.", reply_markup = show_menu_keyboard())
+            welcome_text = f"Welcome, {getUserData(user_id)['name']}.\nChoose action from menu."
+            return welcome_text
     else:
         if localization=="ru":
             bot.send_message(message.chat.id,f"Здравствуйте!\nВы не зарегистрированы.\nДля дальнейшего взаимодействия необходимо зарегистрироваться.\n\n<b>Пришлите Ваше ФИО полностью.</b>", parse_mode=ParseMode.HTML)
@@ -294,9 +296,17 @@ def register_user_end(message, name, phone, location):
         else:
             bot.send_message(message.chat.id,"Something went wrong!")
 
+#Если пользователь отправляет сообщение, а не команду
+#Check if user send just a message, not a command
+@bot.message_handler(func=lambda message: True)
+def if_not_command(message):
+    if not active_action:
+        welcome_text = welcome_message(message)
+        bot.send_message(message.chat.id,welcome_text, reply_markup = show_menu_keyboard())
 
-
-#Команда /ticket_new
+#ticket_new
+#Создать новую заявку
+#Create new Ticket 
 @bot.message_handler(commands=['ticket_new'])
 def new_ticket(message):
     chat_id = message.chat.id
@@ -350,7 +360,9 @@ def process_insert_step(message, subject):
     conn.close()
     end_active_action()
 
-# Команда /ticket_about
+#/ticket_about
+#Вывод информации о заявке
+#Print info about Ticket
 @bot.message_handler(commands=['ticket_about'])
 def about_ticket(message):
     chat_id = message.chat.id
@@ -403,7 +415,9 @@ def process_ticket_id_step(message):
 
 
 
-# Команда /ticket_cancel
+#/ticket_cancel
+#Отмена заявки
+# Function to cancel ticket
 @bot.message_handler(commands=['ticket_cancel'])
 def cancel_ticket(message):
     chat_id = message.chat.id
