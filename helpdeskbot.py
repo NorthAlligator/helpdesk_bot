@@ -298,11 +298,11 @@ def register_user_end(message, name, phone, location):
 
 #Если пользователь отправляет сообщение, а не команду
 #Check if user send just a message, not a command
-@bot.message_handler(func=lambda message: True)
+@bot.message_handler(func=lambda message: message.text and not message.text.startswith('/'))
 def if_not_command(message):
-    if not active_action:
-        welcome_text = welcome_message(message)
-        bot.send_message(message.chat.id,welcome_text, reply_markup = show_menu_keyboard())
+    #if not active_action:
+    welcome_text = welcome_message(message)
+    bot.send_message(message.chat.id,welcome_text, reply_markup = show_menu_keyboard())
 
 #ticket_new
 #Создать новую заявку
