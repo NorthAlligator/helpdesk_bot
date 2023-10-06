@@ -67,7 +67,7 @@ DB and Tables will automatically created if they not exists in dir of Project.
 
 Все данные хранятся в БД SQLite. Есть 1 БД(helpdesk.db) и две таблицы users и tickets.
 
-Также необходимо создать файл config.py, который содержит данные переменные: "bot_token", "db_location", "localization" и "root_pass".
+Также необходим файл config.py, который содержит данные переменные: "bot_token", "db_location", "localization" и "root_pass".
 Файл создастся автоматически, если он не существует.
 
 База данных и Таблицы автоматически создадутся в папке проекта, если они не существуют.
