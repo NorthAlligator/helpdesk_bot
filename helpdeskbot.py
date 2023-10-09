@@ -5,10 +5,14 @@ from telegram.constants import ParseMode
 import datetime
 import time
 
+
+
 #Устанавливаем текущую директорию, как директорию исполняемого файла
 #Set current dir as dir of our python file
 project_directory = os.path.dirname(os.path.abspath(__file__))
 os.chdir(project_directory)
+
+
 
 #Проверяем, существует ли конфигурационный файл config.py
 #Check if config.py exists
@@ -29,9 +33,13 @@ else:
     else:
         print("Конфигурационный файл существует / Configuration file exists")
 
+
+
 #Иморт переменных из конфигурационного файла config.py
 #Import variables from config.py
 from config import bot_token, db_location, localization, root_pass
+
+
 
 #Проверка указана ли локализация в config.py
 #Check if localization exists in config.py
@@ -43,6 +51,8 @@ else:
     print("Укажите локализацию(ru или en) в config.py / Specify localization(ru or en) in config.py")
     exit()
     
+
+
 #Проверка указан ли root пароль в config.py
 #Check if root_pass exists in config.py
 if not root_pass:
@@ -58,7 +68,11 @@ if not root_pass:
 #Create bot
 bot = telebot.TeleBot(bot_token)
 
+
+
 active_action = None
+
+
 
 #Проверка существует ли БД и таблицы
 #Check if DB exists
@@ -126,6 +140,8 @@ else:
         print(f"Can't find Database. Check config.py")
         exit()
 
+
+
 #Просто текст
 #Just a text
 if localization == 'ru':
@@ -133,8 +149,12 @@ if localization == 'ru':
 else:
     print(f"Bot is started.\nIf you want to turn off bot you have to type this command /root_stop_polling to Bot in Telegram")
 
+
+
 ##### Базовые функции #####
 ##### Basic functions #####
+
+
 
 #Проверка админ ли пользователь
 #Check is User in Admins
@@ -147,6 +167,8 @@ def getAdmins():
     conn.close()
     return admin_users
       
+
+
 #Получение данных пользователя из базы   
 #Get User data from DB
 def getUserData(user_id):
@@ -160,6 +182,8 @@ def getUserData(user_id):
 def end_active_action():
     global active_action
     active_action = None
+
+
 
 #Отображение клавиатуры меню
 #Show Keyboard menu
@@ -221,8 +245,11 @@ def handle_cancel_ticket_callback(callback_query):
         cancel_ticket(message)
 
 
+
 ##### Обработчики сообщений и комманд #####
 ##### Message and commands handlers #####
+
+
 
 #Команда /start
 #/start command
@@ -296,6 +323,8 @@ def register_user_end(message, name, phone, location):
         else:
             bot.send_message(message.chat.id,"Something went wrong!")
 
+
+
 #Если пользователь отправляет сообщение, а не команду
 #Check if user send just a message, not a command
 @bot.message_handler(func=lambda message: message.text and not message.text.startswith('/'))
@@ -303,6 +332,8 @@ def if_not_command(message):
     #if not active_action:
     welcome_text = welcome_message(message)
     bot.send_message(message.chat.id,welcome_text, reply_markup = show_menu_keyboard())
+
+
 
 #ticket_new
 #Создать новую заявку
@@ -359,6 +390,8 @@ def process_insert_step(message, subject):
         conn.close()
     conn.close()
     end_active_action()
+
+
 
 #/ticket_about
 #Вывод информации о заявке
@@ -477,6 +510,7 @@ def process_cancel_ticket_id_step(message):
             bot.send_message(chat_id, "Please, give me correct ID.", reply_markup = show_menu_keyboard())
     conn.close()
     end_active_action()
+
 
 
 ##### АДМИН МЕНЮ #####
@@ -920,7 +954,6 @@ def main():
                     print(f"Unknown error which raised from 'telebot'")
                     exit()
 
-
         except Exception as e:
             if "Bot token is not defined" in str(e):
                 if localization == 'ru':
@@ -940,6 +973,8 @@ def main():
                     print("Reboot bot after 3 seconds...")
                     time.sleep(3)
                     print("Bot started.")
+
+
 
 if __name__ == "__main__":
     main()
